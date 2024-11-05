@@ -1,4 +1,9 @@
-#include <freeglut.h>
+#include <freeglut.h>s
+
+// Variabel global untuk posisi dan rotasi Mario
+float posX = 0.0f;
+float posY = 0.0f;
+float angle = 0.0f; // Sudut rotasi, default 0 derajat
 
 void drawPixel(float x, float y, float r, float g, float b) {
     glColor3f(r, g, b); // Set color
@@ -11,9 +16,7 @@ void drawPixel(float x, float y, float r, float g, float b) {
 }
 
 void drawMario() {
-    // Define the pixel data (row by row, from top to bottom)
     int mario[16][16] = {
-        // 1 = red, 2 = orange (face), 3 = brown (hair/clothes), 0 = transparent, 4 = black (details)
         {0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0},
         {0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0},
         {0,0,0,0,3,3,3,2,2,2,4,2,0,0,0,0},
@@ -32,7 +35,6 @@ void drawMario() {
         {0,0,3,3,3,3,0,0,0,0,3,3,3,3,0,0},
     };
 
-    // Draw pixels with corresponding colors
     for (int i = 0; i < 16; ++i) {
         for (int j = 0; j < 16; ++j) {
             float x = j - 8; // Centering the art
@@ -49,8 +51,32 @@ void drawMario() {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // Terapkan translasi dan rotasi
+    glPushMatrix(); // Simpan state matriks saat ini
+    glTranslatef(posX, posY, 0.0f); // Geser posisi Mario
+    glRotatef(angle, 0.0f, 0.0f, 1.0f); // Rotasi Mario di sumbu Z
     drawMario();
+    glPopMatrix(); // Kembalikan state matriks sebelumnya
+
     glutSwapBuffers();
+}
+
+void keyboard(unsigned char key, int x, int y) {
+    switch (key) {
+    case 'w': posY += 1.0f; break; // Pindah ke atas
+    case 's': posY -= 1.0f; break; // Pindah ke bawah
+    case 'a':
+        posX -= 1.0f; // Pindah ke kiri
+        angle = 180.0f; // Rotasi menghadap kiri
+        break;
+    case 'd':
+        posX += 1.0f; // Pindah ke kanan
+        angle = 0.0f; // Rotasi menghadap kanan
+        break;
+    default: break;
+    }
+    glutPostRedisplay(); // Gambar ulang dengan posisi yang diperbarui
 }
 
 int main(int argc, char** argv) {
@@ -58,13 +84,13 @@ int main(int argc, char** argv) {
     glutInitWindowSize(640, 480);
     glutInitWindowPosition(100, 100);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutCreateWindow("Mario Pixel Art");
+    glutCreateWindow("Mario Pixel Art Movement with Rotation");
 
-    // Set the background color to sky blue
     glClearColor(135.0 / 255.0f, 206.0 / 255.0f, 235.0 / 255.0f, 1.0f);
     gluOrtho2D(-40, 40, -40, 40);
 
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard); // Daftarkan fungsi input keyboard
     glutMainLoop();
     return 0;
 }
