@@ -1,187 +1,70 @@
-// pert2.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include <freeglut.h>
 
-#include<glut.h>
-#include<math.h>
-#include<stdlib.h>
-
-float xp = 0.0f, yp = 0.0f, r = 4.0f, n = 1000.0f, a, x, y;
-
-void ban1() {
-	xp = 0.0f;
-	yp = 3.0f;
-	glColor3ub(241, 180, 47);
-	glBegin(GL_POLYGON);
-	a = 2 * 3.14 / n;
-	for (int i = 0; i < n; i++) {
-		x = xp + r * cos(i * a);
-		y = yp + r * sin(i * a);
-		glVertex2f(x, y);
-	}
-	glEnd();
+void drawPixel(float x, float y, float r, float g, float b) {
+    glColor3f(r, g, b); // Set color
+    glBegin(GL_QUADS);
+    glVertex2f(x, y);
+    glVertex2f(x + 1.0f, y);
+    glVertex2f(x + 1.0f, y + 1.0f);
+    glVertex2f(x, y + 1.0f);
+    glEnd();
 }
 
-void draw()
-{
-	glBegin(GL_QUADS);
-	glColor3ub(0, 255, 128);
-	glVertex2f(-12.0, -1.0);
-	glVertex2f(12.0, -1.0);
-	glVertex2f(12.0, -12.0);
-	glVertex2f(-12.0, -12.0);
-	glEnd();
+void drawMario() {
+    // Define the pixel data (row by row, from top to bottom)
+    int mario[16][16] = {
+        // 1 = red, 2 = orange (face), 3 = brown (hair/clothes), 0 = transparent, 4 = black (details)
+        {0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0},
+        {0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0},
+        {0,0,0,0,3,3,3,2,2,2,4,2,0,0,0,0},
+        {0,0,0,3,2,3,2,2,2,2,4,2,2,2,0,0},
+        {0,0,0,3,2,3,3,2,2,2,2,4,2,2,2,0},
+        {0,0,0,0,3,2,2,2,2,2,4,4,4,4,0,0},
+        {0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0},
+        {0,0,0,0,1,1,5,1,1,1,1,0,0,0,0,0},
+        {0,0,0,1,1,1,5,1,1,5,1,1,1,0,0,0},
+        {0,0,1,1,1,1,5,5,5,5,1,1,1,1,0,0},
+        {0,0,2,2,1,5,6,5,5,6,5,1,2,2,0,0},
+        {0,0,2,2,2,5,5,5,5,5,5,2,2,2,0,0},
+        {0,0,2,2,5,5,5,5,5,5,5,5,2,2,0,0},
+        {0,0,0,0,5,5,5,0,0,5,5,5,0,0,0,0},
+        {0,0,0,3,3,3,0,0,0,0,3,3,3,0,0,0},
+        {0,0,3,3,3,3,0,0,0,0,3,3,3,3,0,0},
+    };
 
-	ban1();
-
-	glBegin(GL_TRIANGLES);
-	glColor3ub(0, 100, 0);
-	glVertex2f(-5.0, 3.0);
-	glVertex2f(2.0, -1.0);
-	glVertex2f(-12.0, -1.0);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3ub(46, 139, 87);
-	glVertex2f(6.0, 3.0);
-	glVertex2f(12.0, -1.0);
-	glVertex2f(1.0, -1.0);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3ub(122, 122, 122);
-	glVertex2f(1.0, -1.0);
-	glVertex2f(2.0, -1.0);
-	glVertex2f(-4.0, -12.0);
-	glVertex2f(-8.0, -12.0);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3ub(204, 51, 51);
-	glVertex2f(4.0, -5.0);
-	glVertex2f(9.0, -5.0);
-	glVertex2f(9.0, -7.0);
-	glVertex2f(4.0, -7.0);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3ub(288, 0, 124);
-	glVertex2f(5.0, -3.0);
-	glVertex2f(6.0, -5.0);
-	glVertex2f(4.0, -5.0);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3ub(0, 0, 0);
-	glVertex2f(5.0, -3.0);
-	glVertex2f(8.0, -3.0);
-	glVertex2f(9.0, -5.0);
-	glVertex2f(6.0, -5.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-10.0, -3.0);
-	glVertex2f(-9.25, -4.0);
-	glVertex2f(-9.0, -3.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-8.0, -3.0);
-	glVertex2f(-7.25, -4.0);
-	glVertex2f(-7.0, -3.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-6.5, -3.0);
-	glVertex2f(-6.25, -4.0);
-	glVertex2f(-5.5, -3.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glVertex2f(-5.0, -3.0);
-	glVertex2f(-4.25, -4.0);
-	glVertex2f(-4.0, -3.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-10.0, -5.0);
-	glVertex2f(-9.25, -6.0);
-	glVertex2f(-9.0, -5.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-8.0, -5.0);
-	glVertex2f(-7.25, -6.0);
-	glVertex2f(-7.0, -5.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-6.5, -5.0);
-	glVertex2f(-6.25, -6.0);
-	glVertex2f(-5.5, -5.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glVertex2f(-5.0, -5.0);
-	glVertex2f(-4.25, -6.0);
-	glVertex2f(-4.0, -5.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-10.0, -7.0);
-	glVertex2f(-9.25, -8.0);
-	glVertex2f(-9.0, -7.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-8.0, -7.0);
-	glVertex2f(-7.25, -8.0);
-	glVertex2f(-7.0, -7.0);
-	glEnd();
-
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(0, 66, 37);
-	glVertex2f(-6.5, -7.0);
-	glVertex2f(-6.25, -8.0);
-	glVertex2f(-5.5, -7.0);
-	glEnd();
-
+    // Draw pixels with corresponding colors
+    for (int i = 0; i < 16; ++i) {
+        for (int j = 0; j < 16; ++j) {
+            float x = j - 8; // Centering the art
+            float y = 8 - i; // Invert y for OpenGL's coordinate system
+            if (mario[i][j] == 1) drawPixel(x, y, 1.0f, 0.0f, 0.0f); // Red
+            else if (mario[i][j] == 2) drawPixel(x, y, 1.0f, 0.647f, 0.0f); // Orange
+            else if (mario[i][j] == 3) drawPixel(x, y, 0.545f, 0.271f, 0.075f); // Brown
+            else if (mario[i][j] == 4) drawPixel(x, y, 0.0f, 0.0f, 0.0f); // Black
+            else if (mario[i][j] == 5) drawPixel(x, y, 0.0f, 0.0f, 1.0f); // Blue
+            else if (mario[i][j] == 6) drawPixel(x, y, 1.0f, 1.0f, 0.0f); // Yellow
+        }
+    }
 }
 
 void display() {
-	glClear(GL_COLOR_BUFFER_BIT);
-	draw();
-	glutSwapBuffers();
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawMario();
+    glutSwapBuffers();
 }
 
-int main() {
-	glutInit(&__argc, __argv);
-	glutInitWindowSize(640, 480);
-	glutInitWindowPosition(100, 100);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutCreateWindow("My First FreeGlut Project");
-	glClearColor(135.0 / 255.0f, 206.0 / 255.0f, 235.0 / 255.0f, 1.0f);
-	gluOrtho2D(-12, 12, -12, 12);
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(100, 100);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutCreateWindow("Mario Pixel Art");
 
-	glutIdleFunc(display);
-	glutDisplayFunc(display);
-	glutMainLoop();
+    // Set the background color to sky blue
+    glClearColor(135.0 / 255.0f, 206.0 / 255.0f, 235.0 / 255.0f, 1.0f);
+    gluOrtho2D(-40, 40, -40, 40);
+
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
