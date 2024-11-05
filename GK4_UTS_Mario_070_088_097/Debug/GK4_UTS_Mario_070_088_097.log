@@ -1,0 +1,7 @@
+﻿  GK4_UTS_Mario_070_088_097.cpp
+C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(40,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(41,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(92,56): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(92,40): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(92,24): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+  GK4_UTS_Mario_070_088_097.vcxproj -> C:\Users\msi modern\Repositori\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\Debug\GK4_UTS_Mario_070_088_097.exe
