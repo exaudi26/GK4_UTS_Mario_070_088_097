@@ -1,4 +1,4 @@
-#include <freeglut.h>s
+#include <freeglut.h>
 
 // Variabel global untuk posisi dan rotasi Mario
 float posX = 0.0f;
@@ -52,12 +52,15 @@ void drawMario() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Terapkan translasi dan rotasi
-    glPushMatrix(); // Simpan state matriks saat ini
-    glTranslatef(posX, posY, 0.0f); // Geser posisi Mario
-    glRotatef(angle, 0.0f, 0.0f, 1.0f); // Rotasi Mario di sumbu Z
+    glPushMatrix();
+    glTranslatef(posX, posY, 0.0f);
+
+    if (angle == 180.0f) {
+        glScalef(-1.0f, 1.0f, 1.0f); // Mirror di sumbu X saat menghadap kiri
+    }
+
     drawMario();
-    glPopMatrix(); // Kembalikan state matriks sebelumnya
+    glPopMatrix();
 
     glutSwapBuffers();
 }
@@ -68,15 +71,15 @@ void keyboard(unsigned char key, int x, int y) {
     case 's': posY -= 1.0f; break; // Pindah ke bawah
     case 'a':
         posX -= 1.0f; // Pindah ke kiri
-        angle = 180.0f; // Rotasi menghadap kiri
+        angle = 180.0f; // Tandai bahwa Mario menghadap kiri
         break;
     case 'd':
         posX += 1.0f; // Pindah ke kanan
-        angle = 0.0f; // Rotasi menghadap kanan
+        angle = 0.0f; // Tandai bahwa Mario menghadap kanan
         break;
     default: break;
     }
-    glutPostRedisplay(); // Gambar ulang dengan posisi yang diperbarui
+    glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
@@ -84,7 +87,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(640, 480);
     glutInitWindowPosition(100, 100);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutCreateWindow("Mario Pixel Art Movement with Rotation");
+    glutCreateWindow("Mario Pixel Art Movement with Mirroring");
 
     glClearColor(135.0 / 255.0f, 206.0 / 255.0f, 235.0 / 255.0f, 1.0f);
     gluOrtho2D(-40, 40, -40, 40);
