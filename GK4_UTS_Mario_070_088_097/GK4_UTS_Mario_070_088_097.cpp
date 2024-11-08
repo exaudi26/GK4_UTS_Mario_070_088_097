@@ -5,6 +5,11 @@ float posX = 0.0f;
 float posY = 0.0f;
 float angle = 0.0f; // Sudut rotasi, default 0 derajat
 
+// Variabel untuk lompatan
+bool isJumping = false;      // Apakah Mario sedang melompat
+float jumpSpeed = 0.0f;      // Kecepatan lompatan Mario
+float gravity = -0.1f;       // Gravitasi yang menarik Mario turun
+
 void drawPixel(float x, float y, float r, float g, float b) {
     glColor3f(r, g, b); // Set color
     glBegin(GL_QUADS);
@@ -49,6 +54,19 @@ void drawMario() {
     }
 }
 
+void updateJump() {
+    if (isJumping) {
+        posY += jumpSpeed;   // Tambahkan kecepatan ke posisi Y
+        jumpSpeed += gravity; // Tambahkan gravitasi ke kecepatan
+
+        if (posY <= 0.0f) {   // Jika menyentuh tanah
+            posY = 0.0f;      // Reset ke posisi awal
+            isJumping = false; // Tidak sedang melompat
+            jumpSpeed = 0.0f;  // Reset kecepatan lompatan
+        }
+    }
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -61,6 +79,8 @@ void display() {
 
     drawMario();
     glPopMatrix();
+
+    updateJump(); // Perbarui posisi lompatan setiap frame
 
     glutSwapBuffers();
 }
@@ -77,6 +97,12 @@ void keyboard(unsigned char key, int x, int y) {
         posX += 1.0f; // Pindah ke kanan
         angle = 0.0f; // Tandai bahwa Mario menghadap kanan
         break;
+    case ' ': // Tombol spasi untuk melompat
+        if (!isJumping) {     // Mulai lompatan jika tidak sedang melompat
+            isJumping = true; // Tandai bahwa Mario sedang melompat
+            jumpSpeed = 2.0f; // Set kecepatan awal lompatan
+        }
+        break;
     default: break;
     }
     glutPostRedisplay();
@@ -87,13 +113,14 @@ int main(int argc, char** argv) {
     glutInitWindowSize(640, 480);
     glutInitWindowPosition(100, 100);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutCreateWindow("Mario Pixel Art Movement with Mirroring");
+    glutCreateWindow("Mario Pixel Art Movement with Jumping");
 
     glClearColor(135.0 / 255.0f, 206.0 / 255.0f, 235.0 / 255.0f, 1.0f);
     gluOrtho2D(-40, 40, -40, 40);
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard); // Daftarkan fungsi input keyboard
+    glutIdleFunc(display);      // Render ulang saat idle untuk update lompatan
     glutMainLoop();
     return 0;
 }
