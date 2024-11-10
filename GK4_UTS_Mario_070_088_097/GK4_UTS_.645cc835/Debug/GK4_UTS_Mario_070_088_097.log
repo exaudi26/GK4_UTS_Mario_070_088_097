@@ -1,9 +1,9 @@
 ﻿  GK4_UTS_Mario_070_088_097.cpp
-C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(45,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(46,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(118,56): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(118,40): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(118,24): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(57,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(58,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(308,56): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(308,40): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097.cpp(308,24): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
   GK4_UTS_Mario_070_088_097.vcxproj -> C:\Users\brian\GK4_UTS_Mario_070_088_097\GK4_UTS_Mario_070_088_097\Debug\GK4_UTS_Mario_070_088_097.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
