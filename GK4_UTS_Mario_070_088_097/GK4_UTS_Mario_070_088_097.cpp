@@ -3,6 +3,7 @@
 
 
 float backgroundOffsetX = 0.0f; // Offset untuk efek infinite scroll
+float backgroundOffsetX2 = 0.0f;      // Offset untuk efek infinite scroll pada awan lapisan 2
 float mountainOffsetX = 0.0f; // Offset untuk efek parallax gunung yang lebih lambat
 
 
@@ -65,23 +66,23 @@ void drawMario() {
     }
 }
 
+// Fungsi menggambar awan
 void drawCloud(float posX, float posY) {
-    // Menggambar awan dengan beberapa lingkaran yang lebih besar
-    glColor3f(1.0f, 1.0f, 1.0f); // Warna putih
-    float cloudRadius = 4.0f; // Radius lingkaran awan diperbesar
+    glColor3f(1.0f, 1.0f, 1.0f);
+    float cloudRadius = 4.0f;
 
     // Lingkaran pertama
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(posX, posY); // Titik pusat lingkaran
+    glVertex2f(posX, posY);
     for (int i = 0; i <= 360; i++) {
-        float angle = i * 3.14159f / 180.0f; // Konversi derajat ke radian
+        float angle = i * 3.14159f / 180.0f;
         glVertex2f(posX + cos(angle) * cloudRadius, posY + sin(angle) * cloudRadius);
     }
     glEnd();
 
     // Lingkaran kedua
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(posX + 5.0f, posY); // Titik pusat lingkaran diperlebar
+    glVertex2f(posX + 5.0f, posY);
     for (int i = 0; i <= 360; i++) {
         float angle = i * 3.14159f / 180.0f;
         glVertex2f(posX + 5.0f + cos(angle) * cloudRadius, posY + sin(angle) * cloudRadius);
@@ -90,13 +91,29 @@ void drawCloud(float posX, float posY) {
 
     // Lingkaran ketiga
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(posX + 2.5f, posY + 3.0f); // Titik pusat lingkaran diperbesar
+    glVertex2f(posX + 2.5f, posY + 3.0f);
     for (int i = 0; i <= 360; i++) {
         float angle = i * 3.14159f / 180.0f;
         glVertex2f(posX + 2.5f + cos(angle) * cloudRadius, posY + 3.0f + sin(angle) * cloudRadius);
     }
     glEnd();
 }
+
+void drawCloudsWithParallax() {
+    float cloudSpacing = 80.0f;
+    float screenWidth = 80.0f;
+
+    // Gambar awan di lapisan pertama dengan offset pertama
+    for (float x = -screenWidth / 2 + fmod(backgroundOffsetX, cloudSpacing); x < screenWidth / 2; x += cloudSpacing) {
+        drawCloud(x, 15.0f);
+    }
+
+    // Gambar awan di lapisan kedua dengan offset kedua dan posisi berbeda
+    for (float x = -screenWidth / 2 + fmod(backgroundOffsetX2, cloudSpacing); x < screenWidth / 2; x += cloudSpacing) {
+        drawCloud(x  , 30.0f);
+    }
+}
+
 
 
 float brickWidth = 15.0f;  // Lebar background hitam (default 15.0f)
@@ -166,8 +183,9 @@ void keyboard(unsigned char key, int x, int y) {
             posX -= 1.0f;
         }
         else if (backgroundOffsetX < 0.0f) {
-            backgroundOffsetX += 1.0f;
-            mountainOffsetX += 0.5f; // Parallax untuk gunung, bergerak lebih lambat
+            backgroundOffsetX += 1.5f;
+            backgroundOffsetX2 += 1.0f; // Parallax yang lebih lambat untuk awan lapisan kedua
+            mountainOffsetX += 0.5f;
         }
         angle = 180.0f;
         break;
@@ -176,8 +194,9 @@ void keyboard(unsigned char key, int x, int y) {
             posX += 1.0f;
         }
         else {
-            backgroundOffsetX -= 1.0f;
-            mountainOffsetX -= 0.5f; // Parallax untuk gunung
+            backgroundOffsetX -= 1.5f;
+            backgroundOffsetX2 -= 1.0f; // Parallax yang lebih lambat untuk awan lapisan kedua
+            mountainOffsetX -= 0.5f;
         }
         angle = 0.0f;
         break;
@@ -236,6 +255,8 @@ void display() {
 
     // Gambar Gunung dengan ukuran dan posisi Y yang dapat diatur
     drawMountainsWithParallax();
+    drawCloudsWithParallax();
+
 
 
     // Gambar awan tanpa batas dengan wrap-around posisi X
