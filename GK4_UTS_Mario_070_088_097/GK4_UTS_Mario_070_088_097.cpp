@@ -3,6 +3,7 @@
 
 
 float backgroundOffsetX = 0.0f; // Offset untuk efek infinite scroll
+float mountainOffsetX = 0.0f; // Offset untuk efek parallax gunung yang lebih lambat
 
 
 // Variabel global untuk posisi dan rotasi Mario
@@ -108,7 +109,7 @@ void setBrickSize(float newWidth, float newHeight) {
 }
 
 void drawBrick(float BrickHeight) {
-    float gridSpacing = 16.5f; // Jarak antar grid, sesuaikan sesuai lebar grid
+    float gridSpacing = 17.0f; // Jarak antar grid, sesuaikan sesuai lebar grid
     float screenWidth = 80.0f; // Lebar layar (sesuaikan dengan pengaturan ortho)
 
     // Mulai dari posisi terjauh ke kiri yang masih di layar, lalu gambar grid hingga melampaui lebar layar
@@ -160,20 +161,23 @@ void updateJump(float deltaTime) {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-    case 'a':  // Tombol kiri
-        // Mario hanya bisa bergerak ke kiri sampai batas awal (-30)
+    case 'a':
         if (posX > -30.0f) {
             posX -= 1.0f;
-        } else if (backgroundOffsetX < 0.0f) {
-            backgroundOffsetX += 1.0f;  // Geser background jika Mario mencapai batas kiri
+        }
+        else if (backgroundOffsetX < 0.0f) {
+            backgroundOffsetX += 1.0f;
+            mountainOffsetX += 0.5f; // Parallax untuk gunung, bergerak lebih lambat
         }
         angle = 180.0f;
         break;
-    case 'd':  // Tombol kanan
-        if (posX < 0.0f) {  // Mario bebas bergerak hingga posisi tengah layar
+    case 'd':
+        if (posX < 0.0f) {
             posX += 1.0f;
-        } else {
-            backgroundOffsetX -= 1.0f;  // Geser background setelah Mario melewati tengah layar
+        }
+        else {
+            backgroundOffsetX -= 1.0f;
+            mountainOffsetX -= 0.5f; // Parallax untuk gunung
         }
         angle = 0.0f;
         break;
@@ -188,12 +192,51 @@ void keyboard(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
+float mountainScale = 4.0f; // Variabel untuk mengatur ukuran gunung (1.0f adalah ukuran default)
+float mountainPosY = -17.0f; // Variabel untuk mengatur posisi Y gunung
+float mountainSpacing = 50.0f; // Jarak antar gunung
+
+// Fungsi menggambar gunung dengan efek parallaxing
+void drawMountain(float posX) {
+    glColor3f(0.5f, 0.5f, 0.5f);
+
+    // Gunung pertama (segitiga besar)
+    glBegin(GL_TRIANGLES);
+    glVertex2f(posX, -17.0f);
+    glVertex2f(posX + 15.0f * 4.0f, -17.0f);
+    glVertex2f(posX + 7.5f * 4.0f, 20.0f); 
+    glEnd();
+
+    // Gunung kedua (segitiga lebih kecil)
+    glColor3f(0.3f, 0.3f, 0.3f);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(posX + 5.0f * 4.0f, -17.0f);
+    glVertex2f(posX + 10.0f * 4.0f, -17.0f);
+    glVertex2f(posX + 7.5f * 4.0f, 0.0f);  
+    glEnd();
+}
+
+// Fungsi untuk menggambar semua gunung dengan posisi bergeser menggunakan parallax
+void drawMountainsWithParallax() {
+    float mountainSpacing = 80.0f;
+    float screenWidth = 80.0f;
+
+    // Posisi X gunung berdasarkan offset parallax
+    for (float x = -screenWidth / 2 + fmod(mountainOffsetX, mountainSpacing); x < screenWidth / 2; x += mountainSpacing) {
+        drawMountain(x);
+    }
+}
+
 void display() {
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (currentTime - lastTime) / 10.0f; // Konversi ke detik
     lastTime = currentTime;
 
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // Gambar Gunung dengan ukuran dan posisi Y yang dapat diatur
+    drawMountainsWithParallax();
+
 
     // Gambar awan tanpa batas dengan wrap-around posisi X
     float cloudSpacing = 80.0f; // Jarak antar awan
@@ -208,12 +251,11 @@ void display() {
     }
 
     // Loop untuk menggambar grid beberapa kali
-    drawBrick( - 45.0f );  
-    drawBrick( - 33.0f);  
-    setBrickSize(19.0f,16.0f);  
+    drawBrick(-49.5f);
+    drawBrick(-33.0f);
+    setBrickSize(19.0f, 16.0f);
 
-
-
+ 
 
     // Gambar Mario
     glPushMatrix();
