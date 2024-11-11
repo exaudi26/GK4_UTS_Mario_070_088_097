@@ -2,28 +2,27 @@
 #include <cmath>
 
 
-float backgroundOffsetX = 0.0f; // Offset untuk efek infinite scroll
-float backgroundOffsetX2 = 0.0f;      // Offset untuk efek infinite scroll pada awan lapisan 2
-float mountainOffsetX = 0.0f; // Offset untuk efek parallax gunung yang lebih lambat
+float backgroundOffsetX = 0.0f; 
+float backgroundOffsetX2 = 0.0f; 
+float mountainOffsetX = 0.0f;
 
 
 // Variabel global untuk posisi dan rotasi Mario
 float posX = -30.0f;
-float posY = -11.0f;  // Ubah nilai posY sesuai dengan ground level
-float groundLevelY = posY;  // Tambahkan groundLevelY untuk posisi awal Mario
-float angle = 0.0f; // Sudut rotasi, default 0 derajat
+float posY = -11.0f; 
+float groundLevelY = posY;  
+float angle = 0.0f;
 
 
 // Variabel untuk lompatan
-bool isJumping = false;      // Apakah Mario sedang melompat
-float jumpSpeed = 0.0f;      // Kecepatan lompatan Mario
-float gravity = -0.1f;       // Gravitasi yang menarik Mario turun
+bool isJumping = false;
+float jumpSpeed = 0.0f;
+float gravity = -0.1f;
 
-// Delta time variables
-int lastTime = 0; // Waktu frame terakhir
+int lastTime = 0;
 
 void drawPixel(float x, float y, float r, float g, float b) {
-    glColor3f(r, g, b); // Set color
+    glColor3f(r, g, b);
     glBegin(GL_QUADS);
     glVertex2f(x, y);
     glVertex2f(x + 1.0f, y);
@@ -54,8 +53,8 @@ void drawMario() {
 
     for (int i = 0; i < 16; ++i) {
         for (int j = 0; j < 16; ++j) {
-            float x = j - 8; // Centering the art
-            float y = 8 - i; // Invert y for OpenGL's coordinate system
+            float x = j - 8; 
+            float y = 8 - i;
             if (mario[i][j] == 1) drawPixel(x, y, 1.0f, 0.0f, 0.0f); // Red
             else if (mario[i][j] == 2) drawPixel(x, y, 1.0f, 0.647f, 0.0f); // Orange
             else if (mario[i][j] == 3) drawPixel(x, y, 0.545f, 0.271f, 0.075f); // Brown
@@ -71,7 +70,6 @@ void drawCloud(float posX, float posY) {
     glColor3f(1.0f, 1.0f, 1.0f);
     float cloudRadius = 4.0f;
 
-    // Lingkaran pertama
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(posX, posY);
     for (int i = 0; i <= 360; i++) {
@@ -80,7 +78,6 @@ void drawCloud(float posX, float posY) {
     }
     glEnd();
 
-    // Lingkaran kedua
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(posX + 5.0f, posY);
     for (int i = 0; i <= 360; i++) {
@@ -89,7 +86,6 @@ void drawCloud(float posX, float posY) {
     }
     glEnd();
 
-    // Lingkaran ketiga
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(posX + 2.5f, posY + 3.0f);
     for (int i = 0; i <= 360; i++) {
@@ -114,44 +110,38 @@ void drawCloudsWithParallax() {
     }
 }
 
+float brickWidth = 15.0f; 
+float brickHeight = 15.0f; 
 
-
-float brickWidth = 15.0f;  // Lebar background hitam (default 15.0f)
-float brickHeight = 15.0f; // Tinggi background hitam (default 15.0f)
-
-// Fungsi untuk mengubah ukuran background hitam
 void setBrickSize(float newWidth, float newHeight) {
     brickWidth = newWidth;
     brickHeight = newHeight;
 }
 
 void drawBrick(float BrickHeight) {
-    float gridSpacing = 17.0f; // Jarak antar grid, sesuaikan sesuai lebar grid
-    float screenWidth = 80.0f; // Lebar layar (sesuaikan dengan pengaturan ortho)
+    float gridSpacing = 17.0f; 
+    float screenWidth = 80.0f; 
 
-    // Mulai dari posisi terjauh ke kiri yang masih di layar, lalu gambar grid hingga melampaui lebar layar
     for (float x = -screenWidth / 2 + fmod(backgroundOffsetX, gridSpacing); x < screenWidth / 2; x += gridSpacing) {
-        // Menggambar persegi besar hitam sebagai latar belakang untuk setiap grid
-        glColor3f(0.0f, 0.0f, 0.0f); // Warna hitam
+        glColor3f(0.0f, 0.0f, 0.0f);
         glBegin(GL_QUADS);
-        glVertex2f(x - 0.5f, BrickHeight); // Posisi kiri bawah
-        glVertex2f(x + brickWidth, BrickHeight); // Posisi kanan bawah
-        glVertex2f(x + brickWidth, BrickHeight + brickHeight); // Posisi kanan atas
-        glVertex2f(x - 0.5f, BrickHeight + brickHeight); // Posisi kiri atas
+        glVertex2f(x - 0.5f, BrickHeight);
+        glVertex2f(x + brickWidth, BrickHeight); 
+        glVertex2f(x + brickWidth, BrickHeight + brickHeight);
+        glVertex2f(x - 0.5f, BrickHeight + brickHeight);
         glEnd();
 
-        // Menggambar grid 3x3 kotak di atas persegi besar hitam
-        float startX = x; // Posisi X awal dari setiap grid
-        float startY = BrickHeight; // Posisi Y awal (menggunakan BrickHeight)
-        float size = 5.0f; // Ukuran setiap kotak
-        float spacing = 0.5f; // Jarak antar kotak
+        float startX = x; 
+        float startY = BrickHeight; 
+        float size = 5.0f; 
+        float spacing = 0.5f; 
 
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 3; ++col) {
                 float cellX = startX + col * (size + spacing);
                 float cellY = startY + row * (size + spacing);
 
-                glColor3f(0.714f, 0.286f, 0.149f); // Warna coklat kemerahan
+                glColor3f(0.714f, 0.286f, 0.149f); 
                 glBegin(GL_QUADS);
                 glVertex2f(cellX, cellY);
                 glVertex2f(cellX + size, cellY);
@@ -165,13 +155,13 @@ void drawBrick(float BrickHeight) {
 
 void updateJump(float deltaTime) {
     if (isJumping) {
-        posY += jumpSpeed * deltaTime;   // Tambahkan kecepatan ke posisi Y
-        jumpSpeed += gravity * deltaTime; // Tambahkan gravitasi ke kecepatan
+        posY += jumpSpeed * deltaTime;   
+        jumpSpeed += gravity * deltaTime; 
 
-        if (posY <= groundLevelY) {  // Gunakan groundLevelY sebagai level tanah
-            posY = groundLevelY;      // Reset ke posisi awal di groundLevelY
-            isJumping = false;        // Tidak sedang melompat
-            jumpSpeed = 0.0f;         // Reset kecepatan lompatan
+        if (posY <= groundLevelY) {  
+            posY = groundLevelY;    
+            isJumping = false; 
+            jumpSpeed = 0.0f;  
         }
     }
 }
@@ -184,7 +174,7 @@ void keyboard(unsigned char key, int x, int y) {
         }
         else if (backgroundOffsetX < 0.0f) {
             backgroundOffsetX += 1.5f;
-            backgroundOffsetX2 += 1.0f; // Parallax yang lebih lambat untuk awan lapisan kedua
+            backgroundOffsetX2 += 1.0f; 
             mountainOffsetX += 0.5f;
         }
         angle = 180.0f;
@@ -195,7 +185,7 @@ void keyboard(unsigned char key, int x, int y) {
         }
         else {
             backgroundOffsetX -= 1.5f;
-            backgroundOffsetX2 -= 1.0f; // Parallax yang lebih lambat untuk awan lapisan kedua
+            backgroundOffsetX2 -= 1.0f; 
             mountainOffsetX -= 0.5f;
         }
         angle = 0.0f;
@@ -211,9 +201,9 @@ void keyboard(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-float mountainScale = 4.0f; // Variabel untuk mengatur ukuran gunung (1.0f adalah ukuran default)
-float mountainPosY = -17.0f; // Variabel untuk mengatur posisi Y gunung
-float mountainSpacing = 50.0f; // Jarak antar gunung
+float mountainScale = 4.0f; 
+float mountainPosY = -17.0f;
+float mountainSpacing = 50.0f; 
 
 // Fungsi menggambar gunung dengan efek parallaxing
 void drawMountain(float posX) {
@@ -240,7 +230,6 @@ void drawMountainsWithParallax() {
     float mountainSpacing = 80.0f;
     float screenWidth = 80.0f;
 
-    // Posisi X gunung berdasarkan offset parallax
     for (float x = -screenWidth / 2 + fmod(mountainOffsetX, mountainSpacing); x < screenWidth / 2; x += mountainSpacing) {
         drawMountain(x);
     }
@@ -248,7 +237,7 @@ void drawMountainsWithParallax() {
 
 void display() {
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    float deltaTime = (currentTime - lastTime) / 10.0f; // Konversi ke detik
+    float deltaTime = (currentTime - lastTime) / 10.0f;
     lastTime = currentTime;
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -257,46 +246,34 @@ void display() {
     drawMountainsWithParallax();
     drawCloudsWithParallax();
 
-
-
     // Gambar awan tanpa batas dengan wrap-around posisi X
-    float cloudSpacing = 80.0f; // Jarak antar awan
-    float screenWidth = 80.0f; // Lebar layar (atur sesuai pengaturan ortho)
+    float cloudSpacing = 80.0f; 
+    float screenWidth = 80.0f; 
 
-    // Mulai dari posisi terjauh ke kiri yang masih di layar, lalu gambar awan hingga melampaui lebar layar
     for (float x = -screenWidth / 2 + fmod(backgroundOffsetX, cloudSpacing); x < screenWidth / 2; x += cloudSpacing) {
-        drawCloud(x, 15.0f);  // Y dapat disesuaikan sesuai tinggi awan yang diinginkan
-        drawCloud(x + 20.0f, 25.0f);  // Y dapat disesuaikan sesuai tinggi awan yang diinginkan
-        drawCloud(x + 40.0f, 15.0f);  // Y dapat disesuaikan sesuai tinggi awan yang diinginkan
-        drawCloud(x + 70.0f, 25.0f);  // Y dapat disesuaikan sesuai tinggi awan yang diinginkan
+        drawCloud(x, 15.0f);  
+        drawCloud(x + 20.0f, 25.0f);
+        drawCloud(x + 40.0f, 15.0f); 
+        drawCloud(x + 70.0f, 25.0f);
     }
 
-    // Loop untuk menggambar grid beberapa kali
-    drawBrick(-49.5f);
+    drawBrick(-45.0f);
     drawBrick(-33.0f);
     setBrickSize(19.0f, 16.0f);
-
- 
 
     // Gambar Mario
     glPushMatrix();
     glTranslatef(posX, posY, 0.0f);
     if (angle == 180.0f) {
-        glScalef(-1.0f, 1.0f, 1.0f); // Mirror di sumbu X saat menghadap kiri
+        glScalef(-1.0f, 1.0f, 1.0f);
     }
     drawMario();
     glPopMatrix();
 
-    updateJump(deltaTime); // Perbarui posisi lompatan dengan delta time
+    updateJump(deltaTime);
 
     glutSwapBuffers();
 }
-
-
-
-
-
-
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
